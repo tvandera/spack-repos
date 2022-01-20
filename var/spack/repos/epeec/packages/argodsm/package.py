@@ -1,6 +1,4 @@
-from socket import CAN_EFF_MASK
 from spack import *
-
 
 class Argodsm(CMakePackage):
     """ArgoDSM is a software distributed shared memory system.
@@ -19,9 +17,10 @@ class Argodsm(CMakePackage):
 
     @run_before('cmake')
     def link_google_test(self):
-        import os
-        # see instructions on https://etascale.github.io/argodsm/
-        os.symlink(self.spec['googletest'].prefix, 'gtest-1.7.0')
+        if self.run_tests:
+            import os
+            # see instructions on https://etascale.github.io/argodsm/
+            os.symlink(self.spec['googletest'].prefix, 'gtest-1.7.0')
 
     def cmake_args(self):
         define = CMakePackage.define
