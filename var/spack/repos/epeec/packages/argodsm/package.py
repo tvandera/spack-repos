@@ -13,20 +13,23 @@ class Argodsm(CMakePackage):
     version('epeec-final', branch='epeec-final-release', git='https://github.com/lundgren87/argodsm')
 
     depends_on('numactl')
-    depends_on('mpi')
-    depends_on('googletest@1.7.0', type='test')
 
-    @run_before('cmake')
-    def link_google_test(self):
-        if self.run_tests:
-            import os
-            # see instructions on https://etascale.github.io/argodsm/
-            os.symlink(self.spec['googletest'].prefix, 'gtest-1.7.0')
+    depends_on('mpi')
+
+    resource(
+        name='googletest',
+        url='https://github.com/google/googletest/archive/release-1.7.0.zip',
+        sha256='b58cb7547a28b2c718d1e38aee18a3659c9e3ff52440297e965f5edffe34b6d0',
+        destination='tests',
+        placement='gtest-1.7.0',
+    )
 
     def cmake_args(self):
         define = CMakePackage.define
         args = [ 
             define('ARGO_ENABLE_MT', True),
             define('ARGO_TESTS', self.run_tests),
+            define('CMAKE_CXX_COMPILER', self.spec['mpi'].mpicxx),
+            define('CMAKE_C_COMPILER', self.spec['mpi'].mpicc),
         ]
         return args
