@@ -10,6 +10,7 @@ class Argodsm(CMakePackage):
     maintainers = ['tvandera', ]
 
     version('2021.01', commit='24247b7bce2c184001142e8bcfda35b769bee4f5')
+    version('epeec-final', branch='epeec-final-release', git='https://github.com/lundgren87/argodsm')
 
     depends_on('numactl')
     depends_on('mpi')

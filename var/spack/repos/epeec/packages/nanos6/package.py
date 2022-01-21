@@ -32,7 +32,7 @@ class Nanos6(AutotoolsPackage):
     depends_on('libtool', type='build')
     depends_on('pkgconfig', type='build')
 
-    depends_on("argodsm", when='@argodsm')
+    depends_on("argodsm@epeec-final", when='@argodsm')
     depends_on("mpi", when='@cluster')
     depends_on("hwloc")
     depends_on("extrae")
@@ -56,6 +56,7 @@ class Nanos6(AutotoolsPackage):
 
         if 'argodsm' in spec:
             args += [ '--with-argodsm=%s' % spec['argodsm'].prefix ]
+            args += [ '--enable-cluster' ]
 
         if '@cluster' in spec:
             args += [ '--enable-cluster' ]
