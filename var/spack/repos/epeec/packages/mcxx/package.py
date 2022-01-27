@@ -29,17 +29,9 @@ class Mcxx(AutotoolsPackage):
     depends_on('pkgconfig', type='build')
 
     depends_on('gcc@7.3.0')
+    depends_on('binutils')
     depends_on("nanos6")
-    depends_on("hwloc")
-    depends_on("extrae")
     depends_on("libiconv")
-    depends_on("sqlite")
-    depends_on("gperf", type="build")
-
-    # requires gcc 7.x or lower
-    conflicts('%gcc@8:')
-    conflicts('%intel')
-    conflicts('%clang')
 
     def configure_args(self):
         spec = self.spec
