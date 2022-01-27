@@ -23,7 +23,6 @@ class Mcxx(AutotoolsPackage):
 
     version('2021.11', tag='github-release-2021.11')
 
-
     depends_on('autoconf', type='build')
     depends_on('automake', type='build')
     depends_on('libtool', type='build')
