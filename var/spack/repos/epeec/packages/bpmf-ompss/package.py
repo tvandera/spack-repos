@@ -11,7 +11,8 @@ class BpmfOmpss(MakefilePackage):
 
     maintainers = ['tvandera', ]
 
-    version('ompss',  branch='ompss')
+    version('argo',  branch='ompss@argo')
+    version('cluster',  branch='ompss@cluster')
 
     # numlatent = [2, 4, 8, ..., 128]
     variant(
@@ -21,8 +22,11 @@ class BpmfOmpss(MakefilePackage):
 
     variant('profile', default=True, description='Enable profiling')
 
-    depends_on('nanos6')
+    depends_on('nanos6@argodsm', when='@argo')
+    depends_on('nanos6@cluster', when='@cluster')
     depends_on('mcxx', type='build')
+
+    # common bpmf dependecies
     depends_on('random123')
     depends_on('eigen')
     depends_on('zlib')
