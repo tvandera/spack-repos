@@ -28,17 +28,13 @@ class Bpmf(CMakePackage):
         when="@master"
     )
 
-    variant(
-       'cluster', default='plain', description='Ompss@Cluster variant',
-        values=('plain', 'argodsm'), multi=False,
-        when="@ompss"
-    )
-
     for c in mpi_comms:
         depends_on('mpi', when=f"comm={c}")
 
     depends_on('gpi-2', when="comm=gpi")
     depends_on('argodsm', when="comm=argo")
+    
+    depends_on('mpi', type="test")
 
     depends_on('random123')
     depends_on('eigen')
