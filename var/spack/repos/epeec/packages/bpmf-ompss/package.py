@@ -42,5 +42,6 @@ class BpmfOmpss(MakefilePackage):
 
     def install(self, spec, prefix):
         mkdir(prefix.bin)
-        for file in [ 'mcc_bpmf', 'extrae.xml', 'nanos6.toml', 'trace.sh' ]:
-            install(os.path.join(self.build_directory, file), prefix.bin)
+        install(os.path.join(self.build_directory, 'mcc_bpmf'), os.path.join(prefix.bin, 'bpmf'))
+        # for file in [ 'mcc_bpmf', 'extrae.xml', 'nanos6.toml', 'trace.sh' ]:
+        #    install(os.path.join(self.build_directory, file), prefix.bin)
