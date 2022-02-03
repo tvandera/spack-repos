@@ -1,0 +1,147 @@
+commit b318360aac89ac158d634527095e64caea45e051
+Author: Tom Vander Aa <vanderaa@imec.be>
+Date:   Thu Feb 3 19:39:51 2022 +0100
+
+    WIP: compilation fixes for GCC 11
+
+diff --git a/src/include/dis.h b/src/include/dis.h
+index 7144d6b..1eb4771 100644
+--- a/src/include/dis.h
++++ b/src/include/dis.h
+@@ -250,10 +250,10 @@ auth_def_t * transport_chan_get_authdef(int, int);
+ int transport_send_pkt(int, int, void *, size_t);
+ int transport_recv_pkt(int, int *, void **, size_t *);
+ 
+-pbs_tcp_chan_t * (*pfn_transport_get_chan)(int);
+-int (*pfn_transport_set_chan)(int, pbs_tcp_chan_t *);
+-int (*pfn_transport_recv)(int, void *, int);
+-int (*pfn_transport_send)(int, void *, int);
++extern pbs_tcp_chan_t * (*pfn_transport_get_chan)(int);
++extern int (*pfn_transport_set_chan)(int, pbs_tcp_chan_t *);
++extern int (*pfn_transport_recv)(int, void *, int);
++extern int (*pfn_transport_send)(int, void *, int);
+ 
+ #define transport_recv(x, y, z) (*pfn_transport_recv)(x, y, z)
+ #define transport_send(x, y, z) (*pfn_transport_send)(x, y, z)
+diff --git a/src/lib/Libdis/dis.c b/src/lib/Libdis/dis.c
+index 4b7bfe5..1b256c5 100644
+--- a/src/lib/Libdis/dis.c
++++ b/src/lib/Libdis/dis.c
+@@ -41,6 +41,11 @@
+ 
+ #include "dis_.h"
+ 
++pbs_tcp_chan_t * (*pfn_transport_get_chan)(int);
++int (*pfn_transport_set_chan)(int, pbs_tcp_chan_t *);
++int (*pfn_transport_recv)(int, void *, int);
++int (*pfn_transport_send)(int, void *, int);
++
+ const char *dis_emsg[] = {"No error",
+ 	"Input value too large to convert to this type",
+ 	"Tried to write floating point infinity",
+diff --git a/src/scheduler/fifo.c b/src/scheduler/fifo.c
+index de8eb60..d466ca7 100644
+--- a/src/scheduler/fifo.c
++++ b/src/scheduler/fifo.c
+@@ -132,6 +132,8 @@ static int last_running_size = 0;
+ extern int	second_connection;
+ extern int	get_sched_cmd_noblk(int sock, int *val, char **jobid);
+ 
++int		connector;
++
+ /**
+  * @brief
+  * 		initialize conf struct and parse conf files
+diff --git a/src/scheduler/fifo.h b/src/scheduler/fifo.h
+index 0056118..06e4f7c 100644
+--- a/src/scheduler/fifo.h
++++ b/src/scheduler/fifo.h
+@@ -45,7 +45,8 @@ extern "C" {
+ 
+ #include  <limits.h>
+ #include "data_types.h"
+-int connector;
++
++extern int connector;
+ 
+ /*
+  *      schedinit - initialize conf struct and parse conf files
+diff --git a/src/scheduler/globals.c b/src/scheduler/globals.c
+index 072ff5e..165bd84 100644
+--- a/src/scheduler/globals.c
++++ b/src/scheduler/globals.c
+@@ -146,7 +146,7 @@ struct status cstat;
+ 
+ /* to make references happy */
+ int pbs_rm_port;
+-int got_sigpipe;
++int got_sigpipe = 0;
+ 
+ int	second_connection;
+ 
+diff --git a/src/scheduler/globals.h b/src/scheduler/globals.h
+index 49e8fee..a62fba2 100644
+--- a/src/scheduler/globals.h
++++ b/src/scheduler/globals.h
+@@ -73,7 +73,7 @@ extern int pbs_rm_port;
+ extern int got_sigpipe;
+ 
+ /* static indexes into allres */
+-const struct enum_conv resind[RES_HIGH+1];
++extern const struct enum_conv resind[RES_HIGH+1];
+ 
+ /* Stuff needed for multi-threading */
+ extern pthread_mutex_t general_lock;
+diff --git a/src/scheduler/pbs_sched.c b/src/scheduler/pbs_sched.c
+index a67430d..46fbfa4 100644
+--- a/src/scheduler/pbs_sched.c
++++ b/src/scheduler/pbs_sched.c
+@@ -114,9 +114,8 @@
+ #include	"multi_threading.h"
+ #include	"auth.h"
+ 
+-int		connector;
+ int		server_sock;
+-int		second_connection = -1;
++static int		second_connection = -1;
+ 
+ #define		START_CLIENTS	2	/* minimum number of clients */
+ #define		MAX_PORT_NUM 65535
+@@ -132,10 +131,6 @@ char		usage[] =
+ 	"[-d home][-L logfile][-p file][-I schedname][-S port][-R port][-n][-N][-c clientsfile][-t num threads]";
+ struct	sockaddr_in	saddr;
+ sigset_t	allsigs;
+-int		pbs_rm_port;
+-
+-/* if we received a sigpipe, this probably means the server went away. */
+-int		got_sigpipe = 0;
+ 
+ /* used in segv restart */
+ time_t segv_start_time;
+diff --git a/src/tools/pbsTclInit.c b/src/tools/pbsTclInit.c
+index 13ed5db..c57c26d 100644
+--- a/src/tools/pbsTclInit.c
++++ b/src/tools/pbsTclInit.c
+@@ -64,7 +64,8 @@
+ 
+ 
+ 
+-char	log_buffer[LOG_BUF_SIZE];
++extern char	log_buffer[LOG_BUF_SIZE];
++
+ #ifdef NAS /* localmod 099 */
+ extern	int	quiet;
+ #endif /* localmod 099 */
+diff --git a/src/tools/pbsTkInit.c b/src/tools/pbsTkInit.c
+index be7840f..763027c 100644
+--- a/src/tools/pbsTkInit.c
++++ b/src/tools/pbsTkInit.c
+@@ -63,7 +63,7 @@
+ #include	"log.h"
+ 
+ 
+-char	log_buffer[LOG_BUF_SIZE];
++extern char	log_buffer[LOG_BUF_SIZE];
+ 
+ extern	void	add_cmds(Tcl_Interp *interp);
+ 
