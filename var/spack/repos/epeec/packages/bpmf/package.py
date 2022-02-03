@@ -20,6 +20,8 @@ class Bpmf(CMakePackage):
     )
 
     variant('profile', default=True, description='Enable profiling')
+    variant('asan', default=False, description='Enable address sanitizer')
+    variant('tsan', default=False, description='Enable thread sanitizer')
 
     mpi_comms = ( 'mpi_isend', 'mpi_bcast', 'mpi_put', 'gpi' )
     variant(
@@ -31,7 +33,7 @@ class Bpmf(CMakePackage):
     for c in mpi_comms:
         depends_on('mpi', when=f"comm={c}")
 
-    depends_on('gpi-2', when="comm=gpi")
+    depends_on('gpi-2+mpi', when="comm=gpi")
     depends_on('argodsm', when="comm=argo")
     
     depends_on('mpi', type="test")
@@ -41,14 +43,13 @@ class Bpmf(CMakePackage):
     depends_on('zlib')
 
     def cmake_args(self):
-        define = CMakePackage.define
         args = [ 
-            define('BPMF_COMM', self.spec.variants['comm'].value.upper() + "_COMM"),
-            define('BPMF_NUMLATENT', self.spec.variants['nl'].value),
+            self.define('BPMF_COMM', self.spec.variants['comm'].value.upper() + "_COMM"),
+            self.define('BPMF_NUMLATENT', self.spec.variants['nl'].value),
+            self.define_from_variant('ENABLE_ASAN', 'asan'),
+            self.define_from_variant('ENABLE_TSAN', 'tsan'),
+            self.define_from_variant('ENABLE_PROFILING', 'profile'),
         ]
-
-        if 'profile' in self.spec:
-            args.append(define('ENABLE_PROFILING', True))
 
         return args
     
