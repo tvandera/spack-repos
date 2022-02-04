@@ -43,7 +43,7 @@ class Openpbs(AutotoolsPackage):
     depends_on('expat')
     depends_on('libedit')
     depends_on('ncurses')
-    depends_on('hwloc@:1')
+    depends_on('hwloc')
     depends_on('libical')
     depends_on('swig')
     depends_on('tcl')
