@@ -33,6 +33,7 @@ class Bpmf(CMakePackage):
     for c in mpi_comms:
         depends_on('mpi', when=f"comm={c}")
 
+    depends_on('cmake', type='build')
     depends_on('gpi-2+mpi', when="comm=gpi")
     depends_on('argodsm', when="comm=argo")
     
