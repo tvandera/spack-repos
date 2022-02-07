@@ -36,12 +36,12 @@ class BpmfOmpss(MakefilePackage):
     @property
     def build_targets(self):
         return [
-            "mcc_bpmf",
+            "bpmf",
             "BPMF_NUMLATENT=%s" % self.spec.variants['nl'].value,
         ]
 
     def install(self, spec, prefix):
         mkdir(prefix.bin)
-        install(os.path.join(self.build_directory, 'mcc_bpmf'), os.path.join(prefix.bin, 'bpmf'))
+        install(os.path.join(self.build_directory, 'bpmf'), os.path.join(prefix.bin, 'bpmf'))
         # for file in [ 'mcc_bpmf', 'extrae.xml', 'nanos6.toml', 'trace.sh' ]:
         #    install(os.path.join(self.build_directory, file), prefix.bin)
