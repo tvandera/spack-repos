@@ -11,8 +11,7 @@ class BpmfOmpss(MakefilePackage):
 
     maintainers = ['tvandera', ]
 
-    version('argo',  branch='ompss@argo')
-    version('cluster',  branch='ompss@cluster')
+    version('ompss',  branch='ompss')
 
     # numlatent = [2, 4, 8, ..., 128]
     variant(
@@ -20,10 +19,7 @@ class BpmfOmpss(MakefilePackage):
         values=[ str(2**i) for i in range(1,8) ], multi=False
     )
 
-    variant('profile', default=True, description='Enable profiling')
-
-    depends_on('nanos6@argodsm', when='@argo')
-    depends_on('nanos6@cluster', when='@cluster')
+    depends_on('nanos6')
     depends_on('mcxx', type='build')
 
     # common bpmf dependecies
@@ -35,10 +31,16 @@ class BpmfOmpss(MakefilePackage):
 
     @property
     def build_targets(self):
-        return [
+        args = [
             "bpmf",
             "BPMF_NUMLATENT=%s" % self.spec.variants['nl'].value,
         ]
+
+
+        if "nanos6@argodsm" in self.spec:
+            args.append("CLUSTER_BACKEND=ARGO")
+
+        return args
 
     def install(self, spec, prefix):
         mkdir(prefix.bin)
