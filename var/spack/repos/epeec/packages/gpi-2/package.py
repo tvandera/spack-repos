@@ -139,10 +139,14 @@ class Gpi2(AutotoolsPackage):
         config_args.extend(self.with_or_without('fortran'))
         # Mpi
         if '+mpi' in spec:
-            config_args += [
-                    '--with-mpi={0}'.format(spec['mpi'].prefix), 
-                    'LIBS=-lmpi',
-            ]
+            if '^intel-oneapi-mpi' in spec:
+                # prefix is messed up in intel-onepi-mpi
+                config_args += ['--with-mpi=yes']
+            else:
+                config_args += ['--with-mpi={0}'.format(spec['mpi'].prefix)]
+
+            config_args.append('LIBS=-lmpi')
+         
         # Fabrics
         if 'fabrics=none' not in spec:
             config_args.extend(self.with_or_without('fabrics'))
