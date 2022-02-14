@@ -27,6 +27,7 @@ class Mcxx(AutotoolsPackage):
     depends_on('automake', type='build')
     depends_on('libtool', type='build')
     depends_on('pkgconfig', type='build')
+    depends_on('gperf', type='build')
 
     depends_on('gcc@7.3.0')
     depends_on('binutils')
