@@ -54,7 +54,7 @@ class Nanos6(AutotoolsPackage):
                   "--with-boost=%s" % spec['boost'].prefix,
         ]
 
-        if 'argodsm' in spec:
+        if '^argodsm' in spec:
             args += [ '--with-argodsm=%s' % spec['argodsm'].prefix ]
             args += [ '--enable-cluster' ]
 
