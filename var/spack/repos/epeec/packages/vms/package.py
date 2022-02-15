@@ -15,6 +15,7 @@ class Vms(MakefilePackage):
     variant('ompss', default=False)
 
     depends_on('nanos6', when='+ompss')
+    depends_on('mpi', when='+mpi')
     depends_on('mcxx', type='build', when='+ompss')
 
     build_directory = 'vms/pure_c'
@@ -31,7 +32,7 @@ class Vms(MakefilePackage):
 
         if "+ompss" in self.spec:
             args += [
-                'CFLAGS=-DOMPSS',
+                'CFLAGS=--ompss-2 -DOMPSS',
                 'CC=mcc',
             ]
 
