@@ -1,5 +1,6 @@
 from spack import *
 import os
+import glob
 
 class Vms(MakefilePackage):
     """Virtual Molecule Screening"""
@@ -11,33 +12,26 @@ class Vms(MakefilePackage):
 
     version('master',  branch='master')
 
-    variant('mpi', default=False)
-    variant('ompss', default=False)
+    variant(
+       'impl', default='plain', description='Implementation',
+        values=( 'plain', 'omp', 'mpi', 'gpi', 'ompss'), multi=False,
+    ) 
 
-    depends_on('nanos6', when='+ompss')
-    depends_on('mpi', when='+mpi')
-    depends_on('mcxx', type='build', when='+ompss')
+    depends_on('mpi', when='impl=mpi')
+    depends_on('mpi', when='impl=gpi')
+    depends_on('gpi-2+mpi', when='impl=gpi')
+
+    depends_on('nanos6', when='impl=ompss')
+    depends_on('mcxx', type='build', when='impl=ompss')
 
     build_directory = 'vms/pure_c'
 
     @property
     def build_targets(self):
-        args = [ "predict", ]
-
-        if "+mpi" in self.spec:
-            args += [
-                'CFLAGS=-DUSE_MPI',
-                'LDFLAGS=-lmpi',
-            ]
-
-        if "+ompss" in self.spec:
-            args += [
-                'CFLAGS=--ompss-2 -DOMPSS',
-                'CC=mcc',
-            ]
-
-        return args
+        impl = self.spec.variants['impl'].value 
+        return [ "-f", "Makefile." + impl ]
 
     def install(self, spec, prefix):
         mkdir(prefix.bin)
-        install(os.path.join(self.build_directory, 'predict'), os.path.join(prefix.bin, 'predict'))
+        binary = glob.glob(os.path.join(self.build_directory, '*', 'predict')).pop()
+        install(binary, prefix.bin)
