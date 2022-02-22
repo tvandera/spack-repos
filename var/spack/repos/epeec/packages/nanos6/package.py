@@ -44,7 +44,7 @@ class Nanos6(AutotoolsPackage):
     depends_on("libiconv")
     depends_on("sqlite")
 
-
+    patch("size_t.patch")
 
     def configure_args(self):
         spec = self.spec
