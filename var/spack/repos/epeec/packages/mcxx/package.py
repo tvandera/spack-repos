@@ -23,16 +23,23 @@ class Mcxx(AutotoolsPackage):
 
     version('2021.11', tag='github-release-2021.11')
 
-    depends_on('autoconf', type='build')
-    depends_on('automake', type='build')
-    depends_on('libtool', type='build')
+    depends_on('autoconf',  type='build')
+    depends_on('automake',  type='build')
+    depends_on('libtool',   type='build')
     depends_on('pkgconfig', type='build')
-    depends_on('gperf', type='build')
+    depends_on('gperf',     type='build')
+    depends_on('bison',     type='build')
+    depends_on('flex',      type='build')
+    depends_on('python',    type='build')
 
-    depends_on('gcc@7.3.0')
+    # mercurium does not like the c++ in later versions of gcc
+    # depends_on('gcc@:7.3.0' when='+cpp')
+
+    depends_on('gcc')
     depends_on('binutils')
     depends_on("nanos6")
     depends_on("libiconv")
+    depends_on("sqlite")
 
     def configure_args(self):
         spec = self.spec
@@ -41,4 +48,7 @@ class Mcxx(AutotoolsPackage):
                   "--with-libiconv-prefix=%s" % spec['libiconv'].prefix,
                   "--with-nanos6=%s" % spec['nanos6'].prefix,
                   "LDFLAGS=-liconv",
+                  "GCC=%s" % os.path.join(spec['gcc'].prefix.bin, "gcc"),
+                  "GXX=%s" % os.path.join(spec['gcc'].prefix.bin, "g++"),
+                  "GFORTRAN=%s" % os.path.join(spec['gcc'].prefix.bin, "gfortran"),
         ]
