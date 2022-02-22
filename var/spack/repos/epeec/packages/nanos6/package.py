@@ -22,18 +22,20 @@ class Nanos6(AutotoolsPackage):
     homepage = "http://pm.bsc.es/"
     git      = "https://github.com/bsc-pm/nanos6"
 
+    version('2021.11', tag='github-release-2021.11')
+    
     version('argodsm', branch='cluster-argo', git="https://github.com/epeec/nanos6-argodsm")
     version('cluster', branch='master', git="https://github.com/bsc-pm/nanos6-cluster")
-    version('2021.11', tag='github-release-2021.11')
-    version('2.7', tag='version-2.7')
 
     depends_on('autoconf', type='build')
     depends_on('automake', type='build')
     depends_on('libtool', type='build')
     depends_on('pkgconfig', type='build')
+    depends_on("gperf", type="build")
 
     depends_on("argodsm@epeec-final", when='@argodsm')
     depends_on("mpi", when='@cluster')
+
     depends_on("hwloc")
     depends_on("extrae")
     depends_on("boost")
@@ -41,7 +43,6 @@ class Nanos6(AutotoolsPackage):
     depends_on("papi")
     depends_on("libiconv")
     depends_on("sqlite")
-    depends_on("gperf", type="build")
 
 
 
