@@ -59,8 +59,8 @@ class Gpi2(AutotoolsPackage):
     depends_on('libtool',  type='build', when='@1.4.0:')
     depends_on('m4',       type='build', when='@1.4.0:')
 
-    depends_on('gawk', type='run')
-    depends_on('openssh', type='run')
+    depends_on('gawk', type='run', when='~mpi')
+    depends_on('openssh', type='run', when='~mpi')
 
     depends_on('mpi', when='+mpi')
     depends_on('rdma-core', when='fabrics=infiniband')
