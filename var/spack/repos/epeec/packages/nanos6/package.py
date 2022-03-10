@@ -25,7 +25,7 @@ class Nanos6(AutotoolsPackage):
     version('2021.11', tag='github-release-2021.11')
     
     version('argodsm', branch='cluster-argo', git="https://github.com/epeec/nanos6-argodsm")
-    version('cluster', branch='master', git="https://github.com/bsc-pm/nanos6-cluster")
+    version('cluster', commit='dce396554ea2645ebf23cb6a16c65a42a83e1221', git="https://github.com/bsc-pm/nanos6-cluster")
 
     depends_on('autoconf', type='build')
     depends_on('automake', type='build')
