@@ -56,7 +56,6 @@ class Extrae(AutotoolsPackage):
     depends_on("elf", type="link")
     depends_on("libxml2")
     depends_on("numactl")
-    depends_on("binutils+libiberty@:2.33")
     depends_on("gettext")
     # gettext dependency added to find -lintl
     # https://www.gnu.org/software/gettext/FAQ.html#integrating_undefined
@@ -65,6 +64,7 @@ class Extrae(AutotoolsPackage):
 
     variant('dyninst', default=False, description="Use dyninst for dynamic code installation")
     depends_on('dyninst@:9', when='+dyninst')
+    depends_on("binutils+libiberty@:2.33", when='+dyninst')
 
     variant('papi', default=True, description="Use PAPI to collect performance counters")
     depends_on('papi', when='+papi')
@@ -83,8 +83,7 @@ class Extrae(AutotoolsPackage):
                 "--with-boost=%s" % spec['boost'].prefix,
                 "--with-dwarf=%s" % spec['libdwarf'].prefix,
                 "--with-elf=%s" % spec['elf'].prefix,
-                "--with-xml-prefix=%s" % spec['libxml2'].prefix,
-                "--with-binutils=%s" % spec['binutils'].prefix]
+                "--with-xml-prefix=%s" % spec['libxml2'].prefix]
 
         if '^intel-oneapi-mpi' in spec:
                 mpiroot = spec['mpi'].prefix
@@ -95,9 +94,11 @@ class Extrae(AutotoolsPackage):
                  if '+papi' in self.spec else
                  ["--without-papi"])
 
-        args += (["--with-dyninst=%s" % spec['dyninst'].prefix]
-                 if '+dyninst' in self.spec else
-                 ["--without-dyninst"])
+        args += ([
+                    "--with-dyninst=%s" % spec['dyninst'].prefix,
+                    "--with-binutils=%s" % spec['binutils'].prefix
+                ] if '+dyninst' in self.spec else
+                ["--without-dyninst", "--without-binutils"])
 
         args += (["--with-cuda=%s" % spec['cuda'].prefix]
                  if '+cuda' in self.spec else
