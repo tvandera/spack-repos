@@ -32,11 +32,7 @@ class Mcxx(AutotoolsPackage):
     depends_on('flex',      type='build')
     depends_on('python',    type='build')
 
-    # mercurium does not like the c++ in later versions of gcc
-    # depends_on('gcc@:7.3.0' when='+cpp')
-
-    depends_on('gcc')
-    depends_on('binutils')
+    depends_on('gcc+binutils')
     depends_on("nanos6")
     depends_on("libiconv")
     depends_on("sqlite")
