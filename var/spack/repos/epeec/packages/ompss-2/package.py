@@ -26,9 +26,7 @@ class Ompss2(Package):
 
     version('2021.06', tag='2021.06', submodules=True)
 
-    conflicts('%gcc@7.4:')
-    conflicts('%clang')
-    depends_on('gcc@7.3.0')
+    depends_on('gcc')
     depends_on('nvhpc')
     depends_on('cuda')
 
