@@ -25,6 +25,7 @@ class Nanos6(AutotoolsPackage):
 
     version('argodsm', branch='cluster-argo', git="https://github.com/epeec/nanos6-argodsm")
     version('cluster', commit='dce396554ea2645ebf23cb6a16c65a42a83e1221', git="https://github.com/bsc-pm/nanos6-cluster")
+    version('openacc', branch='get-queue-affinity-update2021', git="https://github.com/epeec/nanos6-openacc.git")
 
     depends_on('autoconf', type='build')
     depends_on('automake', type='build')
@@ -35,6 +36,10 @@ class Nanos6(AutotoolsPackage):
     depends_on("argodsm@epeec-final", when='@argodsm')
     depends_on("mpi", when='@cluster')
 
+    depends_on('gcc', when="@openacc")
+    depends_on('nvhpc', when="@openacc")
+    depends_on('cuda', when="@openacc")
+
     depends_on("hwloc")
     depends_on("extrae")
     depends_on("boost")
@@ -43,7 +48,8 @@ class Nanos6(AutotoolsPackage):
     depends_on("libiconv")
     depends_on("sqlite")
 
-    patch("size_t.patch")
+    # still needed??
+    #  patch("size_t.patch")
 
     def configure_args(self):
         spec = self.spec
