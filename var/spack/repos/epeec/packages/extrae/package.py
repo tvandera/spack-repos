@@ -5,7 +5,7 @@
 
 import os
 
-from spack import *
+from spack.package import *
 
 # typical working line with extrae 3.0.1
 # ./configure

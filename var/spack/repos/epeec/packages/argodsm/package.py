@@ -1,4 +1,4 @@
-from spack import *
+from spack.package import *
 
 class Argodsm(CMakePackage):
     """ArgoDSM is a software distributed shared memory system.
@@ -26,7 +26,7 @@ class Argodsm(CMakePackage):
 
     def cmake_args(self):
         define = CMakePackage.define
-        args = [ 
+        args = [
             define('ARGO_ENABLE_MT', True),
             define('ARGO_TESTS', self.run_tests),
             define('CMAKE_CXX_COMPILER', self.spec['mpi'].mpicxx),

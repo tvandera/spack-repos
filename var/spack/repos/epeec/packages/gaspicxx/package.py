@@ -1,5 +1,4 @@
-from spack import *
-
+from spack.package import *
 
 class Gaspicxx(CMakePackage):
     """GaspiCxx is a C++ interface for the communication library GPI-2"""

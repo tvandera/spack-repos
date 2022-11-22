@@ -5,7 +5,7 @@
 
 from os import environ
 
-from spack import *
+from spack.package import *
 
 
 class Gpi2(AutotoolsPackage):
@@ -146,7 +146,7 @@ class Gpi2(AutotoolsPackage):
                 config_args += ['--with-mpi={0}'.format(spec['mpi'].prefix)]
 
             config_args.append('LIBS=-lmpi')
-         
+
         # Fabrics
         if 'fabrics=none' not in spec:
             config_args.extend(self.with_or_without('fabrics'))

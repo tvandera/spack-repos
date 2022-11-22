@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
+from spack.package import *
 from spack.util.prefix import Prefix
 
 import os
@@ -44,7 +44,7 @@ class Ompss2(Package):
     depends_on('pkgconfig', type='build')
     depends_on('libtool', type='build')
 
-    # Requires GCC 
+    # Requires GCC
 
 
     def install(self, spec, prefix):
@@ -71,7 +71,7 @@ class Ompss2(Package):
                   "--enable-ompss-2",
                   "--with-libiconv-prefix=%s" % spec['libiconv'].prefix,
                   "--with-nanos6=%s" % prefix,
-                  "--with-pgi-installation=%s" % nvhpc_compiler_prefix, 
+                  "--with-pgi-installation=%s" % nvhpc_compiler_prefix,
                   "LDFLAGS=-liconv",
         )
         make()

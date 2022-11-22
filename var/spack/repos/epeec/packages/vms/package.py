@@ -1,4 +1,4 @@
-from spack import *
+from spack.package import *
 import os
 import glob
 
@@ -6,7 +6,7 @@ class Vms(MakefilePackage):
     """Virtual Molecule Screening"""
 
     homepage = "https://github.imec.be/vanderaa/epeec"
-    git      = "git@github.imec.be:vanderaa/epeec.git"
+    git      = "ssh://git@github.imec.be/vanderaa/epeec.git"
 
     maintainers = ['tvandera', ]
 
@@ -15,7 +15,7 @@ class Vms(MakefilePackage):
     variant(
        'impl', default='plain', description='Implementation',
         values=( 'plain', 'omp', 'mpi', 'gpi', 'ompss'), multi=False,
-    ) 
+    )
 
     depends_on('mpi', when='impl=mpi')
     depends_on('mpi', when='impl=gpi')
@@ -28,7 +28,7 @@ class Vms(MakefilePackage):
 
     @property
     def build_targets(self):
-        impl = self.spec.variants['impl'].value 
+        impl = self.spec.variants['impl'].value
         return [ "-f", "Makefile." + impl ]
 
     def install(self, spec, prefix):

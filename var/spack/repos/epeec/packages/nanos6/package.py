@@ -3,9 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
-import os
-import glob
+from spack.package import *
+from spack.util.prefix import Prefix
 
 
 class Nanos6(AutotoolsPackage):
@@ -23,7 +22,7 @@ class Nanos6(AutotoolsPackage):
     git      = "https://github.com/bsc-pm/nanos6"
 
     version('2021.11', tag='github-release-2021.11')
-    
+
     version('argodsm', branch='cluster-argo', git="https://github.com/epeec/nanos6-argodsm")
     version('cluster', commit='dce396554ea2645ebf23cb6a16c65a42a83e1221', git="https://github.com/bsc-pm/nanos6-cluster")
 
@@ -48,7 +47,7 @@ class Nanos6(AutotoolsPackage):
 
     def configure_args(self):
         spec = self.spec
-        args = [ 
+        args = [
                   "--with-papi=%s" % spec['papi'].prefix,
                   "--with-extrae=%s" % spec['extrae'].prefix,
                   "--with-libunwind=%s" % spec['libunwind'].prefix,
@@ -61,5 +60,14 @@ class Nanos6(AutotoolsPackage):
 
         if '@cluster' in spec:
             args += [ '--enable-cluster' ]
-            
+
+        if '@openacc' in spec:
+            nvhpc = spec['nvhpc']
+            nvhpc_compiler_prefix = Prefix(join_path(nvhpc.prefix, 'Linux_%s' % nvhpc.target.family, nvhpc.version, 'compilers'))
+            args += [
+                  "--enable-openacc",
+                  "--with-pgi=%s" % nvhpc_compiler_prefix,
+                  "--with-cuda=%s" % spec['cuda'].prefix,
+            ]
+
         return args

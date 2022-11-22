@@ -1,4 +1,4 @@
-from spack import *
+from spack.package import *
 import os
 
 class Bpmf(CMakePackage):
@@ -36,7 +36,7 @@ class Bpmf(CMakePackage):
     depends_on('cmake', type='build')
     depends_on('gpi-2+mpi', when="comm=gpi")
     depends_on('argodsm', when="comm=argo")
-    
+
     depends_on('mpi', type="test")
 
     depends_on('random123')
@@ -44,7 +44,7 @@ class Bpmf(CMakePackage):
     depends_on('zlib')
 
     def cmake_args(self):
-        args = [ 
+        args = [
             self.define('BPMF_COMM', self.spec.variants['comm'].value.upper() + "_COMM"),
             self.define('BPMF_NUMLATENT', self.spec.variants['nl'].value),
             self.define_from_variant('ENABLE_ASAN', 'asan'),
@@ -53,7 +53,7 @@ class Bpmf(CMakePackage):
         ]
 
         return args
-    
+
     def install(self, spec, prefix):
         mkdir(prefix.bin)
         install(os.path.join(self.build_directory, 'bpmf'), prefix.bin)
