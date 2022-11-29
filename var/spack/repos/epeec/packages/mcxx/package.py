@@ -40,6 +40,7 @@ class Mcxx(AutotoolsPackage):
     def configure_args(self):
         spec = self.spec
         return [
+                  "--disable-float128",
                   "--enable-ompss-2",
                   "--with-libiconv-prefix=%s" % spec['libiconv'].prefix,
                   "--with-nanos6=%s" % spec['nanos6'].prefix,
