@@ -36,9 +36,9 @@ class Nanos6(AutotoolsPackage):
     depends_on("argodsm@epeec-final", when='@argodsm')
     depends_on("mpi", when='@cluster')
 
-    depends_on('gcc', when="@openacc")
-    depends_on('nvhpc', when="@openacc")
-    depends_on('cuda', when="@openacc")
+    depends_on('gcc',   when="@openacc", type=('build', 'run'))
+    depends_on('nvhpc', when="@openacc", type=('build', 'run'))
+    depends_on('cuda',  when="@openacc")
 
     depends_on("hwloc")
     depends_on("extrae")
