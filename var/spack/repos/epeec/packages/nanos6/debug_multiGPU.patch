@@ -1,0 +1,49 @@
+diff --git a/src/hardware/HardwareInfo.cpp b/src/hardware/HardwareInfo.cpp
+index 76c4f1ae..c56f7229 100644
+--- a/src/hardware/HardwareInfo.cpp
++++ b/src/hardware/HardwareInfo.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <config.h>
+ #include <nanos6/task-instantiation.h>
++#include <iostream>
+ 
+ #include "HardwareInfo.hpp"
+ #include "hwinfo/HostInfo.hpp"
+@@ -48,6 +49,7 @@ void HardwareInfo::initializeDeviceServices()
+ 	_infos[nanos6_host_device]->initializeDeviceServices();
+ #ifdef USE_OPENACC
+ 	_infos[nanos6_openacc_device]->initializeDeviceServices();
++	std::cout << "HardwareInfo: detected OpenACC devices: " << _infos[nanos6_openacc_device]->getComputePlaceCount() << std::endl;
+ #endif
+ #ifdef USE_CUDA
+ 	_infos[nanos6_cuda_device]->initializeDeviceServices();
+diff --git a/src/hardware/device/DeviceMemManager.cpp b/src/hardware/device/DeviceMemManager.cpp
+index e71554c2..417bb633 100644
+--- a/src/hardware/device/DeviceMemManager.cpp
++++ b/src/hardware/device/DeviceMemManager.cpp
+@@ -5,6 +5,7 @@
+ */
+ 
+ #include <algorithm>
++#include <iostream>
+ 
+ #include "DeviceMemManager.hpp"
+ 
+@@ -21,6 +22,8 @@ void *DeviceMemManager::alloc(size_t size, int deviceNum)
+ {
+ 	assert((size > 0) && (deviceNum >= 0) && (totalDevices > 0));
+ 
++	std::cout << "DeviceMemManager: received allocation request for device " << deviceNum << std::endl;
++
+ 	// deviceNum temporarily will be just (deviceNum % totalDevices)
+ 
+ 	// Our very sophisticated hash...
+@@ -95,6 +98,7 @@ size_t DeviceMemManager::computeDeviceAffinity(Task *task)
+ 	);
+ 
+ 	size_t ret = std::distance(deviceScore, std::max_element(deviceScore, deviceScore + totalDevices));
++	std::cout << "DeviceMemManager: task " << task << " scheduled on device no. " << ret << std::endl;
+ 	return ret;
+ 
+ }

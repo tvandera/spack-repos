@@ -48,8 +48,7 @@ class Nanos6(AutotoolsPackage):
     depends_on("libiconv")
     depends_on("sqlite")
 
-    # still needed??
-    #  patch("size_t.patch")
+    patch("debug_multiGPU.patch", when="@openacc")
 
     def configure_args(self):
         spec = self.spec
