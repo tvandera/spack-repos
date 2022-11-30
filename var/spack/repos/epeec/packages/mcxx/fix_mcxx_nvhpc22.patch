@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index ce27c3689..4702209da 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -500,7 +500,7 @@ then
+       19.*|20.*)
+           pgi_float128_support=no
+           ;;
+-      21.*)
++      21.*|22.*)
+           pgi_float128_support=yes
+           ;;
+       *)

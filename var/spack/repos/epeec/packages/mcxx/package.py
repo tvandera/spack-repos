@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack.package import *
+from spack.util.prefix import Prefix
 import os
 
 
@@ -37,13 +38,19 @@ class Mcxx(AutotoolsPackage):
     depends_on("libiconv")
     depends_on("sqlite")
 
+    depends_on('nvhpc', type=('build', 'run'))
+
+    patch('fix_mcxx_nvhpc22.patch')
+
     def configure_args(self):
         spec = self.spec
+        nvhpc = spec['nvhpc']
+        nvhpc_compiler_prefix = Prefix(join_path(nvhpc.prefix, 'Linux_%s' % nvhpc.target.family, nvhpc.version, 'compilers'))
         return [
-                  "--disable-float128",
                   "--enable-ompss-2",
                   "--with-libiconv-prefix=%s" % spec['libiconv'].prefix,
                   "--with-nanos6=%s" % spec['nanos6'].prefix,
+                  "--with-pgi-installation=%s" % nvhpc_compiler_prefix,
                   "LDFLAGS=-liconv",
                   "GCC=%s" % os.path.join(spec['gcc'].prefix.bin, "gcc"),
                   "GXX=%s" % os.path.join(spec['gcc'].prefix.bin, "g++"),
