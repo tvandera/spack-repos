@@ -25,7 +25,7 @@ class Nanos6(AutotoolsPackage):
 
     version('argodsm', branch='cluster-argo', git="https://github.com/epeec/nanos6-argodsm")
     version('cluster', commit='dce396554ea2645ebf23cb6a16c65a42a83e1221', git="https://github.com/bsc-pm/nanos6-cluster")
-    version('openacc', branch='device-affinity', git="git@github.com:orestiskor/nanos6-openacc.git")
+    version('openacc', branch='device-affinity', git="https://github.com/orestiskor/nanos6-openacc.git")
 
     depends_on('autoconf', type='build')
     depends_on('automake', type='build')
